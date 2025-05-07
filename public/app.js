@@ -1,6 +1,7 @@
 import fs from "fs"
 import express from "express"
 import bodyParser  from "body-parser";
+import path from "path";
 //funcion para "limpiar" los datos recogidos del archivo
 
 
@@ -29,7 +30,12 @@ let procesar_input = (text)=>{
 let get_input = (url,from)=>{
     let buffer = fs.readFileSync(url,"utf-8");
     if (from ==0) {
-        return procesar_input(buffer.toString().toLowerCase());
+        if (buffer.toString() ==="") {
+            return ""
+        }else{
+            return procesar_input(buffer.toString().toLowerCase());
+        }
+        
     }else{
         return buffer.toString().toLowerCase();
     }
@@ -142,7 +148,7 @@ let imprimir_resultado = (diccionario, lista)=>{
         console.log(palabra + ": "+diccionario.get(palabra));
         i+=1;
     });
-    return final;
+    return final.toString().replaceAll(",","\n");
 }
 /*let input_entrada = get_input("entrada.in");
 let input_prohibida = get_input("prohibidas.in");
@@ -158,21 +164,27 @@ const app = express();
 app.set("view engine","ejs");
 app.use(bodyParser.urlencoded({extended: true}))
 
-//app.use(express.urlencoded({extended:true}))
+
+app.use(express.static("estilos"))
 
 app.route("/home").get((req,res)=>{
-    console.log("corriendo en http://localhost:3000/home")
+    console.log("\n\n corriendo en http://localhost:3000/home \n\n")
     let input_entrada = get_input("entrada.in",0);
     let input_prohibida = get_input("prohibidas.in",0);
-    let p_prohibidas = guardado_prohibidas(input_prohibida);
-    let diccionario = guardado_conteo(input_entrada,p_prohibidas);
-    let ordenada = guardado_sort(diccionario);
-    let final = imprimir_resultado(diccionario,ordenada);
-    res.status(200).render("index",{datos_entrada:String(get_input("entrada.in",1)),datos_ban:get_input("prohibidas.in",1),data_final:final});
+    let final;
+    if (input_entrada==="") {
+        final = "";
+    }else{
+        let p_prohibidas = guardado_prohibidas(input_prohibida);
+        let diccionario = guardado_conteo(input_entrada,p_prohibidas);
+        let ordenada = guardado_sort(diccionario);
+        final = imprimir_resultado(diccionario,ordenada);
+    }
+    
+    res.render("index",{datos_entrada:String(get_input("entrada.in",1)),datos_ban:get_input("prohibidas.in",1),data_final:final});
 
 }).post((req,res)=>{
     res.status(200)
-    console.log(req.body.input1);
     let a = req.body.input1;
     console.log(a)
     
@@ -185,7 +197,6 @@ app.route("/home/save").get((req,res)=>{
     
 }).post((req,res)=>{
     fs.writeFileSync("entrada.in",String(req.body.input_texto));
-    console.log("hecho!!");
     res.status(200).redirect("/home");
     
 })
@@ -201,5 +212,6 @@ app.route("/home/save_banned").get((req,res)=>{
 
 
 app.listen(3000,(req,res)=>{
-    console.log("corriendo en el puerto :v");
+    console.log("########APP INICIADA########");
+    console.log("corriendo en http://localhost:3000/home")
 })
