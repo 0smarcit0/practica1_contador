@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contador de palabras</title>
+</head>
+<body>
+    <header class="cabecera">hola</header>
+    <section class="cuerpo">
+        <div>
+            <form action="/home/save" method="post" id="form1">
+                
+                <label for="input1">Entrada</label>
+                <textarea name="input_texto" id="input1" placeholder="Ingrese el texto a procesar"><%=datos_entrada%></textarea>
+                <button type="submit">Procesar</button>
+                
+            </form>
+        </div>
+        <div>
+            <form action="/home/save_banned" method="post">
+                <div>
+                    <label for="input">Palabras prohibidas</label>
+                    <textarea name="input_banned" id="input" placeholder="ingresa las palabras prohibidas (una por linea)"><%= datos_ban %></textarea>
+                    <button type="submit">Guardar</button>
+                </div>
+            </form>
+        </div>
+        <div><%= data_final %></div>
+    </section>
+    
+</body>
+</html>
