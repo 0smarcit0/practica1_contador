@@ -3,3 +3,7 @@ dentro de la carpeta public correr el siguiente comando:
 npm i
 
 esto para descargar las dependencias del proyecto
+
+una vez descargadas las dependencias correr el siguiente comando:
+
+npm run test
